@@ -1,6 +1,6 @@
 import react, {Component} from "react";
 import {Form, FormGroup, Label, Input, Button}from 'reactstrap'
-import Header from "../header";
+import Header from "../header_login";
 
 export default class Login extends Component{
     render (){
