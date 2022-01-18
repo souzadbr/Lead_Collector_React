@@ -14,8 +14,8 @@ export default class Landing extends Component {
     const url = "http://localhost:8080/leads";
     const data = {
       email: this.email,
-      senha: this.name,
-      observation: this.observation,
+      nome: this.nome,
+      observacoes: this.observacoes,
     };
     const requestInfo = {
       method: "POST",
@@ -40,13 +40,6 @@ export default class Landing extends Component {
       <div>
         <Header title="Cadastro de Lead" />
         <hr></hr>
-
-        {
-            this.state.message !== ''? (
-                <Alert color='success' className='text-center'>{this.state.message}</Alert>
-             ) : ''
-        }
-
         <Form>
           <FormGroup>
             <Label for="email">Email</Label>
@@ -61,16 +54,16 @@ export default class Landing extends Component {
             <Label for="Nome">Nome</Label>
             <Input
               type="text"
-              id="text"
+              id="nome"
               placeholder="Informe a seu nome:"
-              onChange={(e) => (this.name = e.target.value)}
+              onChange={(e) => (this.nome = e.target.value)}
             />
           </FormGroup>
           <FormGroup>
-            <Label for="Observações">Observações</Label>
-            <Input type="text" id="text" placeholder="Observações:" />
+            <Label for="Observacoes">Observações</Label>
+            <Input type="text" id="Observacoes" placeholder="Observações:" onChange={(e) => (this.observacoes = e.target.value)} />
           </FormGroup>
-          <Button color="primary" blockonClick={this.cadastrarLead}>
+          <Button color="primary" block onClick={this.cadastrarLead}>
             Cadastrar
           </Button>
         </Form>

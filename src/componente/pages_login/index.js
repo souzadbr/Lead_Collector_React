@@ -56,7 +56,7 @@ export default class Login extends Component{
                </FormGroup>
                <FormGroup>
                    <Label for="password">Senha</Label>
-                    <Input type ="password" id ="password" placeholder="Informe a sua senha:" onChange={e => this.senha = e.target.value}/>
+                    <Input type ="password" id ="senha" placeholder="Informe a sua senha:" onChange={e => this.password = e.target.value}/>
                </FormGroup>
                <Button color ="primary" block onClick={this.signIn}>Entrar</Button>
            </Form>
