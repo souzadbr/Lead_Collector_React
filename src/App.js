@@ -1,14 +1,13 @@
 import react, {Component} from "react";
-//import Login from "./componente/pages_login";
 import "./App.css"
-import Casdastro from "./componente/page_landing";
+import Routes from "./route";
 
 
 export default class App extends Component{
 render(){
       return(
         <div className="App"> 
-           <Casdastro/>
+           <Routes/>
         </div>
       );
     }

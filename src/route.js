@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-no-undef */
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import PrivateRoute from './auth';
-import Login from "./components/pages/Login";
-import Dashboard from './components/pages/Dashboard';
-import Landing from './components/pages/Landing';
+import Login from "./componente/pages_login/index";
+import Dashboard from "./componente/dashboard/index";
+import Landing from './componente/page_landing/index'
 
 const Routes = () => (
     <Router>

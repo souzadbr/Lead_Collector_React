@@ -1,6 +1,6 @@
 import react, {Component} from "react";
-import {Form, FormGroup, Label, Input, Button}from 'reactstrap'
-import Header from "../header_login";
+import {Form, FormGroup, Label, Input, Button, Alert}from 'reactstrap'
+import Header from "../header";
 
 export default class Login extends Component{
     constructor(props) {
@@ -44,6 +44,11 @@ export default class Login extends Component{
             <div>
             <Header title="Pagina de login"/>
             <hr></hr>
+            {
+                  this.state.message !== ''? (
+                      <Alert color= "danger" className="text-center">{this.state.message}</Alert>
+                  ) : ''
+              }
                <Form>
                <FormGroup>
                    <Label for="email">Email</Label>
