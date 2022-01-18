@@ -3,6 +3,32 @@ import {Form, FormGroup, Label, Input, Button}from 'reactstrap'
 import Header from "../header_login";
 
 export default class Casdastro extends Component{
+
+    signIn = () => {
+        const url = "http://localhost:8080/leads";
+        const data = {
+            email: this.email,
+            senha: this.name,
+            observation: this.observation,
+        };
+        const requestInfo = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+        };
+        fetch(url, requestInfo)
+        .then(response => {
+            if(response.ok){
+                return response;
+            }
+        }).catch( e => {
+            this.setState({message: e.message})
+            console.log(this.email, this.password)
+        });
+    }
+
     render (){
         return(
             <div>
