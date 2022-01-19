@@ -12,125 +12,126 @@ import {
 import PubSub from "pubsub-js";
 
 class ListLead extends Component {
-  onEdit = (lead) => {
-    PubSub.publish("edit-lead", lead);
-  };
-  delete = (email) => {
-    this.props.deleteLead(email);
-  };
-  render() {
-    const { leads } = this.props;
-    return (
-      <Table className="table-bordered text-center">
-        <thead className="thead-dark">
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Obs.</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {leads.map((lead) => (
-            <tr key={lead.email}>
-              <td>{lead.nome}</td>
-              <td>{lead.email}</td>
-              <td>{lead.observacoes}</td>
-              <td>
-                <Button
-                  color="info"
-                  size="sm"
-                  onClick={(e) => this.onEdit(lead)}
-                >
-                  Editar
-                </Button>
-                <Button
-                  color="danger"
-                  size="sm"
-                  onClick={(e) => this.deleteLead(email)}
-                >
-                  Deletar
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    );
-  }
-}
-
-class FormLead extends Component {
-  state = {
-    model: {
-      nome: "",
-      email: "",
-      observacoes: "",
-    },
-  };
-  componentWillMont() {
-    PubSub.subscribe("edit-lead", (topic, lead) => {
-      this.setState({ model: lead });
-    });
-  }
-  setValues = (e, field) => {
-    const { model } = this.state;
-    model[field] = e.target.value;
-    this.setState({ model });
-  };
-
-  create = () => {
-    this.setState({ model: { nome: "", email: "", observacoes: "" } });
-    this.props.leadCreate(this.state.model);
-  };
-
-  render() {
-    return (
-      <Form>
-        <FormGroup>
-          <div className ="form-row">
-            <Label for="nome"> Nome </Label>
-            <Input
-              id="nome"
-              type="text"
-              value={this.state.model.nome}
-              placeholder="Informe o nome do lead"
-              onChange={(e) => this.setValues(e, "nome")}
-            />
-          </div>
-        </FormGroup>
-        <FormGroup>
-          <div className="form-row">
-            <Label for="email"> Email </Label>
-            <Input
-              id="email"
-              type="text"
-              value={this.state.model.email}
-              placeholder="Informe o email do lead"
-              onChange={(e) => this.setValues(e, "email")}
-            />
-          </div>
-        </FormGroup>
-        <FormGroup>
-          <div className="form-row">
-            <Label for="observations"> Observações </Label>
-            <Input
-              id="observations"
-              type="text"
-              value={this.state.model.observacoes}
-              placeholder="Observações do lead"
-              onChange={(e) => this.setValues(e, "observacoes")}
-            />
-          </div>
-        </FormGroup>
-        <Button color="primary" block onClick={this.create}>
-          ATUALIZAR
-        </Button>
-      </Form>
-    );
-  }
-}
-
+    delete = (email) => {
+        this.props.deleteLead(email);
+      };
+      onEdit = (lead) => {
+        PubSub.publish("edit-lead", lead);
+      };
+      render() {
+        const { leads } = this.props;
+        return (
+          <Table className="table-bordered text-center">
+            <thead className="thead-dark">
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Obs.</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.map((lead) => (
+                <tr key={lead.email}>
+                  <td>{lead.nome}</td>
+                  <td>{lead.email}</td>
+                  <td>{lead.observacoes}</td>
+                  <td>
+                    <Button
+                      color="info"
+                      size="sm"
+                      onClick={(e) => this.onEdit(lead)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      color="danger"
+                      size="sm"
+                      onClick={(e) => this.delete(lead.email)}
+                    >
+                      Deletar
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        );
+      }
+    }
+    class FormLead extends Component {
+        state = {
+          model: {
+            nome: "",
+            email: "",
+            observacoes: "",
+          },
+        };
+      
+        componentWillMount() {
+          PubSub.subscribe("edit-lead", (topic, lead) => {
+            this.setState({ model: lead });
+          });
+        }
+      
+        setValues = (e, field) => {
+          const { model } = this.state;
+          model[field] = e.target.value;
+          this.setState({ model });
+        };
+      
+        create = () => {
+          this.setState({ model: { nome: "", email: "", observacoes: "" } });
+          this.props.leadCreate(this.state.model);
+        };
+      
+        render() {
+          return (
+            <Form>
+              <FormGroup>
+                <div className="form-row">
+                  <Label for="nome"> Nome </Label>
+                  <Input
+                    id="nome"
+                    type="text"
+                    value={this.state.model.nome}
+                    placeholder="Informe o nome do lead"
+                    onChange={(e) => this.setValues(e, "nome")}
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <div className="form-row">
+                  <Label for="email"> Email </Label>
+                  <Input
+                    id="email"
+                    type="text"
+                    value={this.state.model.email}
+                    placeholder="Informe o email do lead"
+                    onChange={(e) => this.setValues(e, "email")}
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <div className="form-row">
+                  <Label for="observations"> Observações </Label>
+                  <Input
+                    id="observations"
+                    type="text"
+                    value={this.state.model.observacoes}
+                    placeholder="Observações do lead"
+                    onChange={(e) => this.setValues(e, "observacoes")}
+                  />
+                </div>
+              </FormGroup>
+              <Button color="primary" block onClick={this.create}>
+                ATUALIZAR
+              </Button>
+            </Form>
+          );
+        }
+      }
+      
 class Dashboard extends Component {
   url = "http://localhost:8080/leads";
 
