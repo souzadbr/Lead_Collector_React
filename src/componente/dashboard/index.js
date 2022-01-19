@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import react, { Component } from "react";
 import {
   Table,
@@ -8,9 +9,15 @@ import {
   Input,
   Alert,
 } from "reactstrap";
-
+import PubSub from "pubsub-js";
 
 class ListLead extends Component {
+  onEdit = (lead) => {
+    PubSub.publish("edit-lead", lead);
+  };
+  delete = (email) => {
+    this.props.deleteLead(email);
+  };
   render() {
     const { leads } = this.props;
     return (
@@ -30,10 +37,18 @@ class ListLead extends Component {
               <td>{lead.email}</td>
               <td>{lead.observacoes}</td>
               <td>
-                <Button color="info" size="sm">
+                <Button
+                  color="info"
+                  size="sm"
+                  onClick={(e) => this.onEdit(lead)}
+                >
                   Editar
                 </Button>
-                <Button color="danger" size="sm">
+                <Button
+                  color="danger"
+                  size="sm"
+                  onClick={(e) => this.deleteLead(email)}
+                >
                   Deletar
                 </Button>
               </td>
@@ -53,6 +68,12 @@ class FormLead extends Component {
       observacoes: "",
     },
   };
+  componentWillMont() {
+    // eslint-disable-next-line no-undef
+    PubSub.subscribe("edit-lead", (topic, lead) => {
+      this.setState({ model: lead });
+    });
+  }
   setValues = (e, field) => {
     const { model } = this.state;
     model[field] = e.target.value;
@@ -60,9 +81,9 @@ class FormLead extends Component {
   };
 
   create = () => {
-      this.setState({model: {nome: "", email: "", observacoes: ""}})
-      this.props.leadCreate(this.state.model);
-  }
+    this.setState({ model: { nome: "", email: "", observacoes: "" } });
+    this.props.leadCreate(this.state.model);
+  };
 
   render() {
     return (
@@ -115,10 +136,10 @@ class Dashboard extends Component {
   url = "http://localhost:8080/leads";
   state = {
     leads: [],
-    message:{
-        text: "",
-        alert: "",
-    }
+    message: {
+      text: "",
+      alert: "",
+    },
   };
 
   componentDidMount() {
@@ -154,41 +175,66 @@ class Dashboard extends Component {
       }),
     };
     fetch(this.url, requestInfo)
-    .then((response)=> response.json())
-    .then(
-        (newLead)=> {
-            let {leads}=this.state;
-            leads.push(newLead);
-            this.setState({
-                leads,
-                message: {
-                    text: "Lead atualizado com sucesso", alert: "success",
-                },
-            });
-        })
-    .catch((e)=> console.log(e));
+      .then((response) => response.json())
+      .then((newLead) => {
+        let { leads } = this.state;
+        leads.push(newLead);
+        this.setState({
+          leads,
+          message: {
+            text: "Lead atualizado com sucesso",
+            alert: "success",
+          },
+        });
+        this.timeMessage(3000);
+      })
+      .catch((e) => console.log(e));
   };
 
+  timeMessage = (duration) => {
+    setTimeout(() => {
+      this.setState({ message: { texte: ", alert: " } });
+    }, duration);
+  };
+
+  delete = (email) => {
+    const token = localStorage.getItem("token");
+    const requestInfo = {
+      method: "DELETE",
+      headers: new Headers({
+        "Content-type": "application/json",
+        Authorization: token,
+      }),
+    };
+    fetch(`${this.url}/${email}`, requestInfo)
+      .then((rows) => {
+        const leads = this.state.leads.filter((lead) => lead.email !== email);
+        this.setState({
+          leads,
+          message: { text: "Lead deletado com sucesso", alert: "danger" },
+        });
+        this.timeMessage(3000);
+      })
+      .catch((e) => console.log(e));
+  };
   render() {
     return (
       <div>
-          {
-            this.state.message.text !== ""? (
-                <Alert color= {this.state.message.text.alert} className="text-center">
-                    {this.state.message.text}
-                </Alert>
-            ) : (
-               "" 
-            )
-          }
+        {this.state.message.text !== "" ? (
+          <Alert color={this.state.message.text.alert} className="text-center">
+            {this.state.message.text}
+          </Alert>
+        ) : (
+          ""
+        )}
         <div className="row">
           <div className="col-md-6 my-3">
             <h2 className="font-weight-bold text-center">ATUALIZAR LEAD</h2>
-            <FormLead leadCreate={this.save}/>
+            <FormLead leadCreate={this.save} />
           </div>
           <div className="col-md-6 my-3">
             <h2 className="font-weight-bold text-center">LISTA DE LEADS </h2>
-            <ListLead leads={this.state.leads} />
+            <ListLead leads={this.state.leads} deleteLead={this.delete} />
           </div>
         </div>
       </div>
