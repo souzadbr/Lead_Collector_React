@@ -69,7 +69,6 @@ class FormLead extends Component {
     },
   };
   componentWillMont() {
-    // eslint-disable-next-line no-undef
     PubSub.subscribe("edit-lead", (topic, lead) => {
       this.setState({ model: lead });
     });
@@ -89,7 +88,7 @@ class FormLead extends Component {
     return (
       <Form>
         <FormGroup>
-          <div className="form-row">
+          <div className ="form-row">
             <Label for="nome"> Nome </Label>
             <Input
               id="nome"
@@ -134,6 +133,7 @@ class FormLead extends Component {
 
 class Dashboard extends Component {
   url = "http://localhost:8080/leads";
+
   state = {
     leads: [],
     message: {
@@ -181,10 +181,7 @@ class Dashboard extends Component {
         leads.push(newLead);
         this.setState({
           leads,
-          message: {
-            text: "Lead atualizado com sucesso",
-            alert: "success",
-          },
+          message: { text: "Lead atualizado com sucesso", alert: "success"},
         });
         this.timeMessage(3000);
       })
@@ -193,7 +190,7 @@ class Dashboard extends Component {
 
   timeMessage = (duration) => {
     setTimeout(() => {
-      this.setState({ message: { texte: ", alert: " } });
+      this.setState({ message: { text: "", alert: ""} });
     }, duration);
   };
 
@@ -221,7 +218,7 @@ class Dashboard extends Component {
     return (
       <div>
         {this.state.message.text !== "" ? (
-          <Alert color={this.state.message.text.alert} className="text-center">
+          <Alert color={this.state.message.alert} className="text-center">
             {this.state.message.text}
           </Alert>
         ) : (
